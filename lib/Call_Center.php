@@ -40,12 +40,15 @@ class RingRevenue_Call_Center_Call
 	protected $call_attributes;
 	protected $api_num;
 	public    $httpRequest;
-
+	public 	  $PORT = 80;
+	
 	public function __construct( $vals ) {
             $this->call_attributes = array();
             $this->attributes($vals);
             $this->api_num = rand(0, 1);
             $this->httpRequest = new CurlRequest();
+            if (isset($_SERVER['argv'][1]))
+            	$this->PORT = $_SERVER['argv'][1]; 
 	}
 
 	public function get_attributes(){
@@ -67,7 +70,8 @@ class RingRevenue_Call_Center_Call
 	}
 
 	protected function generate_api_url(){
-            return "https://api" . $this->api_num . ".ringrevenue.com/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml";
+			$url = ($this->PORT == 80) ? "https://" : "";
+            return $url . "api" . $this->api_num . ".ringrevenue.com:" . $this->PORT . "/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml";
 	}
 
 	protected function request($method){
@@ -75,8 +79,21 @@ class RingRevenue_Call_Center_Call
         
 	$this->httpRequest->setOption(CURLOPT_URL, $this->generate_api_url());    
     
-        $this->httpRequest->setOption(CURLOPT_USERPWD, RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD );
-	$this->httpRequest->setOption(CURLOPT_POSTFIELDS, http_build_query($this->get_attributes()) );
+    $this->httpRequest->setOption(CURLOPT_USERPWD, RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD );
+        
+        $query = '';
+    foreach($this->get_attributes() as $key=>$value){
+    	if(is_array($value)){
+    		foreach($value as $array_val){
+    			$query = $query . '&' . http_build_query(array($key => $array_val) );
+    		}
+    	}
+    	else
+    		$query = $query . '&' . http_build_query( array($key=>$value) );
+    }
+        
+	//$this->httpRequest->setOption(CURLOPT_POSTFIELDS, http_build_query($this->get_attributes()) );
+	$this->httpRequest->setOption(CURLOPT_POSTFIELDS, $query );
 	$this->httpRequest->setOption(CURLOPT_FAILONERROR, false);
 	$this->httpRequest->setOption(CURLOPT_RETURNTRANSFER, 1);
 	
