@@ -32,7 +32,7 @@ class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
   	$call->httpRequest = new CurlRequestMock();
   	$response = $call->save();
   	
-  	$expected_options = array( CURLOPT_URL => "https://api" . $call->get_api_num() . ".ringrevenue.com/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml",
+  	$expected_options = array( CURLOPT_URL => "https://api" . $call->get_api_num() . ".ringrevenue.com:80/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml",
                                    CURLOPT_USERPWD        => RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD,
                                    CURLOPT_POSTFIELDS 	  => 'start_time_t=134124231',
                                    CURLOPT_FAILONERROR    => false,
@@ -44,6 +44,18 @@ class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
   	$this->assertEquals($expected_options, $call->httpRequest->options);
   	if($response['status_code'] >= 200 && $response['status_code'] < 300)
             echo 'Success!\n\n';
+  }
+  
+  public function testGenerateAttributesCorrectly(){
+        $call = new RingRevenue_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
+        $data = array( 'start_time_t'         => '12341231',
+                       'call_center_call_id'  => '1',
+                       'sku_list[]'           => array('one'),
+                       'duration_in_sections' => '200',
+                       'reason_code'          => 'S',
+                       'opt_in_SMS'           => '1');
+  	    $call->attributes( $data );
+  	    $this->assertEquals("call_center_call_id=1&duration_in_sections=200&opt_in_SMS=1&reason_code=S&sku_list%5B%5D=one&start_time_t=12341231", $call->generate_attributes());
   }
   	
   public function testSaveShouldSuccessOn200s(){

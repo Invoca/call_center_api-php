@@ -73,27 +73,32 @@ class RingRevenue_Call_Center_Call
 			$url = ($this->PORT == 80) ? "https://" : "";
             return $url . "api" . $this->api_num . ".ringrevenue.com:" . $this->PORT . "/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml";
 	}
+	
+	public function generate_attributes(){
+	   $query = '';
+	   $attrs = $this->get_attributes();
+	   $keys = array_keys($attrs);
+	   sort($keys);
+  	   foreach($keys as $key){
+    		if(is_array($attrs[$key])){
+    			foreach($attrs[$key] as $array_val){
+    				$query = $query . '&' . http_build_query(array($key => $array_val) );
+    			}
+    		}
+    		else
+    			$query = $query . '&' . http_build_query(array($key => $attrs[$key]) );
+  	   }
+       return substr($query, 1);
+	}
 
-	protected function request($method){
+	protected function request($method){	
 	$this->httpRequest->init($this->generate_api_url());
         
 	$this->httpRequest->setOption(CURLOPT_URL, $this->generate_api_url());    
     
     $this->httpRequest->setOption(CURLOPT_USERPWD, RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD );
         
-        $query = '';
-    foreach($this->get_attributes() as $key=>$value){
-    	if(is_array($value)){
-    		foreach($value as $array_val){
-    			$query = $query . '&' . http_build_query(array($key => $array_val) );
-    		}
-    	}
-    	else
-    		$query = $query . '&' . http_build_query( array($key=>$value) );
-    }
-        
-	//$this->httpRequest->setOption(CURLOPT_POSTFIELDS, http_build_query($this->get_attributes()) );
-	$this->httpRequest->setOption(CURLOPT_POSTFIELDS, $query );
+	$this->httpRequest->setOption(CURLOPT_POSTFIELDS, $this->generate_attributes() );
 	$this->httpRequest->setOption(CURLOPT_FAILONERROR, false);
 	$this->httpRequest->setOption(CURLOPT_RETURNTRANSFER, 1);
 	
