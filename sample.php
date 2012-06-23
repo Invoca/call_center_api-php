@@ -28,8 +28,8 @@
                       'sale_currency'       => "USD",
                       'sale_amount'         => 1.12,
                       'email_address'       => "john@doe.com",
-                      'sku_list'            => array('DVD', 'cleaner'),
-                      'quantity_list'       => array('2', '1') ),
+                      'sku_list[]'            => array('DVD', 'cleaner'),
+                      'quantity_list[]'       => array('2', '1') ),
 		array('start_time_t'        => 1340153017, // Required Field
 
                       'call_center_call_id'  => 91234569,
