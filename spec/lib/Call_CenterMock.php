@@ -2,7 +2,7 @@
 
 require_once 'Call_Center.php';
 
-class RingRevenue_Call_Center_CallMock extends RingRevenue_Call_Center_Call
+class Invoca_Call_Center_CallMock extends Invoca_Call_Center_Call
 {
   
 public function __construct( $data) {

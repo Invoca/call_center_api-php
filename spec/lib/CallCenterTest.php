@@ -5,18 +5,18 @@ require_once realpath(dirname(__FILE__)) . "/Curl_RequestMock.php";
 require_once 'Call_Center.php';
 
   
-class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
+class Invoca_Call_CenterTest extends PHPUnit_Framework_TestCase
 {
   
   public function setUp(){
-  	RingRevenue_Call_Center::config( array( 'CALL_CENTER_ID' => 1,
+  	Invoca_Call_Center::config( array( 'CALL_CENTER_ID' => 1,
  						'API_VERSION'	 => '2012-01-10',
- 						'API_USERNAME'   => 'test@ringrevenue.com',
+ 						'API_USERNAME'   => 'test@invoca.com',
  						'API_PASSWORD'   => 'password') );
   }
   
   public function testCallAttributesUpdate(){
-  	$call = new RingRevenue_Call_Center_Call( array( 'start_time_t' => '134124231' ) );  	
+  	$call = new Invoca_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
   	$data = array( 'start_time_t'         => '12341231',
                        'call_center_call_id'  => '1',
                        'duration_in_sections' => '200',
@@ -28,12 +28,12 @@ class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
   }
   public function testSaveShouldUseCurlCorrectly(){
     $this->expectOutputString('Success!\n\n');
-  	$call = new RingRevenue_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
+  	$call = new Invoca_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
   	$call->httpRequest = new CurlRequestMock();
   	$response = $call->save();
   	
-  	$expected_options = array( CURLOPT_URL => "https://api" . $call->get_api_num() . ".ringrevenue.com:80/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml",
-                                   CURLOPT_USERPWD        => RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD,
+  	$expected_options = array( CURLOPT_URL => "https://api" . $call->get_api_num() . ".invoca.com:80/api/" . Invoca_Call_Center::$API_VERSION . "/calls/" . Invoca_Call_Center::$CALL_CENTER_ID . ".xml",
+                                   CURLOPT_USERPWD        => Invoca_Call_Center::$API_USERNAME . ":" . Invoca_Call_Center::$API_PASSWORD,
                                    CURLOPT_POSTFIELDS 	  => 'start_time_t=134124231',
                                    CURLOPT_FAILONERROR    => false,
                                    CURLOPT_RETURNTRANSFER => 1,
@@ -47,7 +47,7 @@ class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
   }
   
   public function testGenerateAttributesCorrectly(){
-        $call = new RingRevenue_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
+        $call = new Invoca_Call_Center_Call( array( 'start_time_t' => '134124231' ) );
         $data = array( 'start_time_t'         => '12341231',
                        'call_center_call_id'  => '1',
                        'sku_list[]'           => array('one'),
@@ -60,7 +60,7 @@ class RingRevenue_Call_CenterTest extends PHPUnit_Framework_TestCase
   	
   public function testSaveShouldSuccessOn200s(){
     $this->expectOutputString('Success!\n\n');
-    $call = new RingRevenue_Call_Center_CallMock( array( 'start_time_t' => '134124231' ) );
+    $call = new Invoca_Call_Center_CallMock( array( 'start_time_t' => '134124231' ) );
     $response = $call->save();
     if($response['status_code'] >= 200 && $response['status_code'] < 300)
         echo 'Success!\n\n';

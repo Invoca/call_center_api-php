@@ -1,14 +1,14 @@
 <?php
 /* 
- * An example of how to use the PHP wrapper for RingRevenue Call Center API
+ * An example of how to use the PHP wrapper for Invoca Call Center API
  */
  require_once "Call_Center.php";
  
  // Set the information for your specific call center
- RingRevenue_Call_Center::config( array( 'CALL_CENTER_ID' => 1,
+ Invoca_Call_Center::config( array( 'CALL_CENTER_ID' => 1,
  					 'API_VERSION'	  => '2010-04-22',
- 					 'API_USERNAME'   => 'test@ringrevenue.com',
- 					 'API_PASSWORD'   => 'ringrevenue') );
+ 					 'API_USERNAME'   => 'test@invoca.com',
+ 					 'API_PASSWORD'   => 'invoca') );
   
   
   	// Sample Call Data
@@ -44,7 +44,7 @@
  foreach( $call_data as $attributes){
  
     // Create a new call object and save
-    $call = new RingRevenue_Call_Center_Call( $attributes );
+    $call = new Invoca_Call_Center_Call( $attributes );
     $response = $call->save();
     
     // Follow-up code to output response

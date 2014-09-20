@@ -1,12 +1,12 @@
 <?php
 
 /* 
- * PHP wrapper classes to use the RingRevenue Call Center API
+ * PHP wrapper classes to use the Invoca Call Center API
  */
  
  require_once 'Curl_Request.php';
  
- abstract class RingRevenue_Call_Center{
+ abstract class Invoca_Call_Center{
  	public static $CALL_CENTER_ID;
  	public static $API_VERSION;
  	public static $API_USERNAME;
@@ -35,7 +35,7 @@
  }
 
  
-class RingRevenue_Call_Center_Call
+class Invoca_Call_Center_Call
 {
 	protected $call_attributes;
 	protected $api_num;
@@ -71,7 +71,7 @@ class RingRevenue_Call_Center_Call
 
 	protected function generate_api_url(){
 			$url = ($this->PORT == 80) ? "https://" : "";
-            return $url . "api" . $this->api_num . ".ringrevenue.com:" . $this->PORT . "/api/" . RingRevenue_Call_Center::$API_VERSION . "/calls/" . RingRevenue_Call_Center::$CALL_CENTER_ID . ".xml";
+            return $url . "api" . $this->api_num . ".invoca.com:" . $this->PORT . "/api/" . Invoca_Call_Center::$API_VERSION . "/calls/" . Invoca_Call_Center::$CALL_CENTER_ID . ".xml";
 	}
 	
 	public function generate_attributes(){
@@ -96,7 +96,7 @@ class RingRevenue_Call_Center_Call
         
 	$this->httpRequest->setOption(CURLOPT_URL, $this->generate_api_url());    
     
-    $this->httpRequest->setOption(CURLOPT_USERPWD, RingRevenue_Call_Center::$API_USERNAME . ":" . RingRevenue_Call_Center::$API_PASSWORD );
+    $this->httpRequest->setOption(CURLOPT_USERPWD, Invoca_Call_Center::$API_USERNAME . ":" . Invoca_Call_Center::$API_PASSWORD );
         
 	$this->httpRequest->setOption(CURLOPT_POSTFIELDS, $this->generate_attributes() );
 	$this->httpRequest->setOption(CURLOPT_FAILONERROR, false);
